@@ -1,0 +1,72 @@
+﻿%{
+open System
+open Json
+
+%}
+
+// The start token becomes a parser function in the compiled code:
+%start start
+
+// Regular tokens
+%token SYM_COMMA
+       SYM_LBRACKET
+       SYM_RBRACKET
+       SYM_LCURLY
+       SYM_RCURLY
+       SYM_COLON
+%token <string> ID
+%token <string> JSON_BOOL
+%token <string> JSON_NULL
+%token <string> JSON_STRING
+%token <string> JSON_INT
+%token <string> JSON_FLOAT
+%token EOF
+
+// This is the type of the data produced by a successful reduction of the 'start'
+// symbol:
+%type < obj > start
+
+%%
+ 
+start: JsonValue EOF                             { $1 }
+
+JsonValue:
+    | JsonString                                { $1 :> obj }
+    | JsonNumber                                { $1 :> obj }
+    | JsonObject                                { $1 :> obj }
+    | JsonArray                                 { $1 :> obj }
+    | JsonBool                                  { $1 :> obj }
+    | JsonNull                                  { $1 :> obj }
+
+JsonString:
+    | JSON_STRING                               { $1 }
+
+JsonNumber:
+    | JSON_INT                                  { int($1) :> obj }
+    | JSON_FLOAT                                { float($1) :> obj }
+
+JsonObject:
+    | SYM_LCURLY JsonMembers SYM_RCURLY         { $2; }
+
+JsonMembers:
+    |                                           { [ ] }
+    | JsonPair                                  { [ $1 ] }
+    | JsonPair SYM_COMMA JsonMembers            { $1 :: $3 }
+
+JsonPair:
+    | JSON_STRING SYM_COLON JsonValue           { { Label = $1; Value = $3; } }
+
+JsonArray:
+    | SYM_LBRACKET JsonElements SYM_RBRACKET    { Array.ofList $2 }
+
+JsonElements:
+    |                                           { [ ] }
+    | JsonValue                                 { [ $1 ] }
+    | JsonValue SYM_COMMA JsonElements          { $1 :: $3 }
+
+JsonBool:
+    | JSON_BOOL                                 { bool.Parse($1) }
+
+JsonNull:
+    | JSON_NULL                                 { null }
+

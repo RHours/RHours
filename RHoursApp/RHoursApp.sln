@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "rhours", "rhours\rhours.fsproj", "{4E6C2EFE-A145-4F42-ABD9-D73B44AA92F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RHoursCrypto", "RHoursCrypto\RHoursCrypto.csproj", "{C1F31B92-2D79-42EC-9F20-638EFE3AB0CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E6C2EFE-A145-4F42-ABD9-D73B44AA92F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E6C2EFE-A145-4F42-ABD9-D73B44AA92F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E6C2EFE-A145-4F42-ABD9-D73B44AA92F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E6C2EFE-A145-4F42-ABD9-D73B44AA92F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1F31B92-2D79-42EC-9F20-638EFE3AB0CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1F31B92-2D79-42EC-9F20-638EFE3AB0CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1F31B92-2D79-42EC-9F20-638EFE3AB0CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1F31B92-2D79-42EC-9F20-638EFE3AB0CD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FD67F5BC-21FC-4995-86DF-1E58DB14E330}
+	EndGlobalSection
+EndGlobal

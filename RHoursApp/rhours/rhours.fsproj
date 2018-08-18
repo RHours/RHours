@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Sample.json" />
+    <None Include="JsonLexer.fsl" />
+    <None Include="JsonGrammar.fsy" />
+    <Compile Include="Lexing.fs" />
+    <Compile Include="Parsing.fs" />
+    <Compile Include="Json.fs" />
+    <Compile Include="JsonSerialization.fs" />
+    <Compile Include="JsonParser.fs" />
+    <Compile Include="JsonLexer.fs" />
+    <Compile Include="Data.fs" />
+    <Compile Include="Reports.fs" />
+    <Compile Include="Commands.fs" />
+    <Compile Include="SignContribution.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RHoursCrypto\RHoursCrypto.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="4.5.1" />
+    <PackageReference Update="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
+</Project>

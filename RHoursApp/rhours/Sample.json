@@ -1,0 +1,114 @@
+﻿{
+    "Projects": [
+        {
+            "Id": "rhours",
+            "Name": "RHours"
+        }
+    ],
+    "Contributors": [
+        {
+            "Id": "glen",
+            "Name": "Glen"
+        },
+        {
+            "Id": "jake",
+            "Name": "Jake"
+        },
+        {
+            "Id": "joshy",
+            "Name": "Joshy"
+        }
+    ],
+    "ContributionSpans": [
+        {
+            "ProjectId": "rhours",
+            "ContributorId": "joshy",
+            "StartDate": "2018-07-04T00:00:00.0000000",
+            "EndDate": "2018-07-05T00:00:00.0000000",
+            "UtcOffset": 4.0,
+            "Contributions": [
+                {
+                    "Id": "1",
+                    "Term": {
+                        "Type": "HourlyWithCompoundedInterestAndMaxTerm",
+                        "Items": [
+                            {
+                                "Hours": 1.0,
+                                "HourlyRate": 100.0,
+                                "Token": "USD",
+                                "Interest": 1.0,
+                                "MaxMultiplier": 10.0
+                            }
+                        ]
+                    },
+                    "Claims": [ "Meeting with Jake and Glen.", "Discussed economics, branding, implementation." ]
+                },
+                {
+                    "Id": "2",
+                    "Term": {
+                        "Type": "HourlyWithCompoundedInterestAndMaxTerm",
+                        "Items": [
+                            {
+                                "Hours": 1.0,
+                                "HourlyRate": 100.0,
+                                "Token": "USD",
+                                "Interest": 1.0,
+                                "MaxMultiplier": 10.0
+                            }
+                        ]
+                    },
+                    "Claims": [ "Coding on solidity contract" ]
+                }
+            ]
+        },
+        {
+            "ProjectId": "rhours",
+            "ContributorId": "joshy",
+            "StartDate": "2018-07-11T00:00:00.0000000",
+            "EndDate": "2018-07-12T00:00:00.0000000",
+            "UtcOffset": 5.0,
+            "Contributions": [
+                {
+                    "Id": "1",
+                    "Term": {
+                        "Type": "HourlyWithCompoundedInterestAndMaxTerm",
+                        "Items": [
+                            {
+                                "Hours": 1.5,
+                                "HourlyRate": 100.0,
+                                "Token": "USD",
+                                "Interest": 1.0,
+                                "MaxMultiplier": 10.0
+                            }
+                        ]
+                    },
+                    "Claims": [ "Meeting with Jake and Glen.", "Discussed ideology, law, abstraction." ]
+                }
+            ]
+        },
+        {
+            "ProjectId": "rhours",
+            "ContributorId": "jake",
+            "StartDate": "2018-07-03T00:00:00.0000000",
+            "EndDate": "2018-07-04T00:00:00.0000000",
+            "UtcOffset": 7.0,
+            "Contributions": [
+                {
+                    "Id": "1",
+                    "Term": {
+                        "Type": "CashWithCompoundedInterestAndMaxTerm",
+                        "Items": [
+                            {
+                                "Amount": 135.0,
+                                "Token": "USD",
+                                "Interest": 1.0,
+                                "MaxMultiplier": 10.0
+                            }
+                        ]
+                    },
+                    "Claims": [ "Paid friend for RHours logo." ]
+                }
+            ]
+        }
+    ]
+}

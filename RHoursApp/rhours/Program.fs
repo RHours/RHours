@@ -76,8 +76,15 @@ let main argv =
             PublicFolder = DirectoryInfo(@"C:\Projects\RHours\RCoopProcess");
             PrivateFolder = DirectoryInfo(@"C:\Projects\RHours\RCoopProcess_private");
         }
+
+    let configRCLRHours = 
+        {
+            PublicFolder = DirectoryInfo(@"C:\Projects\RHours\RCL-RHours");
+            PrivateFolder = DirectoryInfo(@"C:\Projects\RHours\Private\RCL-RHours");
+        }
+
     
-    RHours.Commands.Data.Initialize(Some(configRCoopProcess))
+    RHours.Commands.Data.Initialize(Some(configRCLRHours))
 
     RunRHoursMenu()
 

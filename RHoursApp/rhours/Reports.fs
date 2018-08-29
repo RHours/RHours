@@ -22,10 +22,10 @@ let private PrettyStringArray (a: string list) : string =
 let private PrettyContribution (term: CompensationTerm) : string =
     match term with
     | CompensationTerm.HourlyWithCompoundedInterestAndMaxTerm(t) -> // "hourly"
-        sprintf "%.1f Hours" (t.Hours)
+        sprintf "%.2f Hours" (t.Hours)
     | CompensationTerm.CashWithCompoundedInterestAndMaxTerm(t) ->   // "cash"
         sprintf "%.2f %s" (t.Amount) (t.Token)
-    | CompensationTerm.ExternalCompensation(s) -> s
+    | CompensationTerm.ExternalCompensation(s) -> sprintf "%s (External)" s
 
 let private ContributionDetail (detail: DateTime * DateTime * string * string * string list) =
     let (spanBegin, spanEnd, contributor, amount, claims) = detail
@@ -58,7 +58,7 @@ let private ContributionProject (data: RHoursData) (project: Project) =
         seq {
             for agreement in data.CompensationAgreements do
                 if agreement.Proposal.Invoice.Project.Id = project.Id then
-                    for span in (agreement.Proposal.Invoice.ContributionSpans) |> Seq.sortByDescending (fun s -> s.StartDate) do
+                    for span in agreement.Proposal.Invoice.ContributionSpans do
                         for contribution in span.Contributions do
                             yield (
                                 (span.StartDate),
@@ -68,8 +68,9 @@ let private ContributionProject (data: RHoursData) (project: Project) =
                                 (contribution.Claims))
         }
     
-    details |> Seq.iter ContributionDetail
-       
+    details |> 
+        Seq.sortByDescending (fun (_, ed, _, _, _) -> ed) |>
+        Seq.iter ContributionDetail
 
 let ContributionReport (data: RHoursData) =
     printfn "# Contributions"

@@ -66,29 +66,51 @@ Logging contributions
 	Use of the copyrighted material is not free of change while there are open compensation claims against the material.
 	Once material has been compensated, the copyright license becomes like other open source licenses like the Apache license.
 	Ownership of copyright is maintained on a per-person basis.
-	
-## Types of contributors
+
+## Member and Non-member Contributions
+Non-member contributions are contributions which do not have associated member rights within RChain LLC. There might be an agreement to pay for use of the contributions. Examples of non-member contributions are: free open source software; expensed items from vendors for incidental items; rent, etc. Providers of non-member contributions may be required to sign a waiver of rights to membership.
+
+Member contributions do have associated member rights within RChain LLC. In general, member contributions are the norm. While exceptions may be allowed, the general distinction determining if a contribution should have associated member rights is if there is a loan associated with the terms of payment for the contribution. As an example, an office space rental expense. Normally, this expense would be paid monthly and come from the RChain LLC budget. The contribution of office space would, in this case, be a non-member contribution and the landlord would not have member rights. As a counter example, a landlord may wish to provide office space and receive compensation under a standard compensation agreement. In this case, the landlord should have membership rights.
+
+## Types of Contributions
 Membership is the RChain LLC is defined by contributions. There is a formal process to become a member; simply making a contribution, of any kind, does not constitute membership whether their contribution(s) were accepted or not. It is the responsibility of the contributor to establish formal membership status. Members of the RChain LLC will likely have made contributions which fall within these broad categories:
-### Investors
+
+### Capital Investment
 Investors provide capital which is provided in the form of a loan and valued in a major currency such as US dollars (USD). Interest rates are meant to be competitive with existing expectations of venture capital return on investment. Investors are members and may participate in governance just as any other member. A compensation agreement is used to express the terms of the loan. Loans are to be paid from revenue and do not have a fixed payment schedule. Instead, an agreement of how network usage fees will be routed to investors is defined in Rholang. As with any compensation agreement, membership rights terminate when full compensation has been achieved. It is possible, that no compensation will ever be received, or that compensation will never be fully met. There will be a cap on the maximum compensation to guard against perpetual ownership. At any time, the RChain LLC can choose to fully compensate a compensation agreement which terminates membership for the investor.
 
-### Validators
-Validators run RChain nodes. They may also provide stake for a proof of stake blockchain implementation of Rholang. Validators charge fees for executing Rholang programs. Validators agree to the terms of use of the RChain node software and, in particular, agree to its licensing terms. Validators make available Rholang libraries which application developers can use. These libraries are licensed under the compensated open source license. Validators agree to share fees under the compensated open source licensing terms.
-Validation is also a contribution so validators are members of the RChain LLC.
+### Operation of RChain Nodes
+Node operators run RChain nodes. They charge fees for executing Rholang programs. Node operators agree to the terms of use of the RChain node software and, in particular, agree to its licensing terms. Node operators install libraries of components on their nodes which provide useful features for applications. These libraries are licensed under the compensated open source license. Node operators agree to share fees under the compensated open source licensing terms.
 
-### Developers
+### Validation
+Validators provide a service of establishing trust within the network that Rholang is executed as written. RChain has been designed with a proof of stake validation scheme. Other schemes may also be developed. Validators charge fees for the service they provide. They may or may not be members of RChain LLC though they are required to have a validation agreement with RChain LLC.
+
+### Software Development
 Developers are people whose contributions are provided in computer source code. Their contributions must be licensed under the compensated open source license. Developers retain their copyright rights but must agree to limit their rights based on the terms of compensation with the RChain LLC.
 
 ### Administrators
-Administrators are people who provide contributions other than through investment, validation, or development. This includes activities like leadership, legal services, accounting and tax services, marketing, etc. Any intellectual property created by administrators must also agree to the terms of the compensated open source license.
-
-### Contract contributions
-Some contributions will be done on contract. It is not preferred that there be perpetual contracts but instead these contributions are meant to be once and done contributions where execution of the formal membership process is not practical. It is permissible that a short (three month) trial period of contribution be defined through contract contributions but only in cases where the normal membership is undesirable to the contributor or not practical for RChain LLC. In general, it is a goal that all contributions be represented through membership. It is permissible that governance rights be extended to contract contributors though not required.
+Administrators are people who provide contributions other than through investment, node operation, validation, or development. This includes activities like leadership, legal services, accounting and tax services, marketing, etc. Any intellectual property created by administrators must also be licensed under the compensated open source license.
 
 ## Compensation Plan
 
+
+## Securities
+Does RChain LLC offer securities? Yes. RChain LLC will issue debt securities which represent a promise to repay a loan from the proceeds of sales of products and services.
+
+Will RChain LLC need to register with the SEC? Maybe. From https://www.sec.gov/answers/about-lawsshtml.html, 
+	
+    Not all offerings of securities must be registered with the Commission. Some exemptions from the registration requirement include:
+	    * private offerings to a limited number of persons or institutions;
+	    * offerings of limited size;
+	    * intrastate offerings; and
+	    * securities of municipal, state, and federal governments.
+	
+Initially RChain LLC will operate using private offerings to a limited number of persons or institutions and/or offerings of a limited size and so will choose not to register with the SEC.
+	
 
 ## Contribution Log
 This is informal until a formalized system is developed.
 
     Glen - Nov 26 - Work on document - Full time focus
+    Jake - Nov 26 - Consultation on document - 2 hours
+    Glen - Nov 27 - Work on document - Full time focus
+

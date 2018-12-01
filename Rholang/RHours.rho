@@ -1,0 +1,57 @@
+// RHours.rho
+
+new stdout(`rho:io:stdout`) in {
+    new RHours in {
+        // To get things started with any RHours code, one name is needed.
+        // TODO: Instead of a global name like @"RHours", use the registry
+        //       to store the name.
+        contract @"RHours"(return) = {
+            return!(bundle+{*RHours})
+        } |
+        
+        // The RHours contract serves as a registry for RHours functionality.
+        // The RegisterContract method takes a label, as a string, of a contract and
+        //     the contract, as a name, itself.
+        
+        // A name, used as a variable, holds a map from the contract label
+        //     to the contract name.
+        new varContractMap in {
+            
+            // Initialize the map of contracts
+            varContractMap!({}) |
+            
+            contract RHours(@"RegisterContract", @label, @c, return) = {
+                // Get the map from the variable
+                for (@map <- varContractMap) {
+                    // Add the label and contract pair to the map
+                    varContractMap!(map.set(label, c)) |
+                    
+                    // Get the map and write it again to ensure there's
+                    //     no chance of returning and the map isn't set.
+                    for (@map <- varContractMap) {
+                        varContractMap!(map.set(label, c)) |
+
+                        // Send on the return channel to indicate the operation is complete
+                        return!(Nil)
+                    }
+                }
+            } |
+            
+            contract RHours(@"LookupContract", @label, return) = {
+                // Get the map from the variable
+                for (@map <- varContractMap) {
+                    // Put the map back in the variable
+                    varContractMap!(map) |
+                    
+                    // Lookup the label
+                    if (map.contains(label)) {
+                        return!(map.get(label))
+                    } else {
+                        return!(Nil)
+                    }
+                }
+            }
+        }
+    }
+}
+

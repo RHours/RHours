@@ -1,21 +1,321 @@
 // RHours.rho
 
-new stdout(`rho:io:stdout`) in {
-    new return in {
-        @"RHours"!(*return) |
-        for (RHours <- return) {
-            RHours!("RegisterContract", "b", 2, *return) |
-            for (_ <- return) {
-                RHours!("LookupContract", "a", *return) |
-                for (c <- return) {
-                    stdout!(*c) |
+new stdout(`rho:io:stdout`), CreateTable in {
+    // CreateTable
+    // A general database table with get, set, delete, scan, etc.
+
+    contract CreateTable(outTable) = {
+        new table, get, add, set, delete, find, pull, store, 
+            varRecordCount, varAdding in {
+
+            contract table(
+                outGet,     // A return channel for the get method
+                outAdd,     // A return channel for the add method
+                outSet,     // A return channel for the set method
+                outDelete,  // A return channel for the delete method
+                outFind     // A return channel for the scan method
+                ) = {
+                    outGet!(*get) |
+                    outAdd!(*add) |
+                    outSet!(*set) |
+                    outDelete!(*delete) |
+                    outFind!(*find)
+            } |
+                
+            // Return the name to the table, send only
+            outTable!(bundle+{*table}) |
+        
+            // Initialize record count
+            varRecordCount!(0) |
+                
+            // Initialize the adding lock
+            varAdding!(Nil) |
+                
+            // Internal contract
+            contract pull(@row, outResult) = {
+                // stdout!("Start of pull") |
                     
-                    RHours!("LookupContract", "b", *return) |
-                    for (c <- return) {
-                        stdout!(*c)
+                for (@count <- varRecordCount) {
+                    // stdout!("Pull record count ${count}" %% {"count": *count}) |
+                        
+                    // Restore the record count variable
+                    varRecordCount!(count) |
+                        
+                    // Check if the record number is in range
+                    if (0 < row and row <= count) {
+                            
+                        // stdout!("Pull row is ${row}" %% {"row": row}) |
+                            
+                        // Get the row from the store
+                        for (@{=row}, deleted, data <- store) {
+                                
+                            // stdout!("Pull row, ${r}=${row}, ${deleted}, ${data}" %% {"row": row, "r": 12, "deleted": *deleted, "data": *data}) |
+    
+                            // Return (Success, deleted state, data)
+                            outResult!(0, *deleted, *data)
+                        }
+                    } else {
+                        // stdout!("Pull didn't get a row") |
+                            
+                        // Return error if record number out range
+                        outResult!(-1, Nil, Nil)  // -1 means record out of range
+                    }
+                }
+            } |
+                
+            contract get(@row, outResult) = {
+                new pullResult in {
+                    pull!(row, *pullResult) |
+                        
+                    for (@valPull, @deleted, @data <- pullResult) {
+                        match valPull {
+                            0 => 
+                                {
+                                    // Put the row back for next get
+                                    store!(row, deleted, data) |
+    
+                                    // Return (Record number, deleted state, data)
+                                    outResult!(row, deleted, data)
+                                }
+                                    
+                            _ => // TODO: change to {-1} when matching on -1 is fixed
+                                // -1 means record out of range
+                                outResult!(-1, Nil, Nil)
+                        }
+                    }
+                }
+            } |
+    
+            contract add(data, outResult) = {
+                // Get the adding lock and record count
+                // TODO: Confirm no deadlock
+                //       If join is not automic, it will deadlock
+                for (_ <- varAdding; 
+                     count <- varRecordCount) {
+                 
+                    // Doesn't matter the order that these happen,
+                    // just that they do happen
+                        
+                    // stdout!("Adding record ${count} with ${data}" %% {"count": *count+1, "data": *data}) |
+                             
+                    // insert the record at the row
+                    store!(*count+1, false, *data) |
+                        
+                    // Increment the record count
+                    varRecordCount!(*count+1) |
+                             
+                    // Reset the adding lock
+                    varAdding!(Nil) |
+
+                    // return the record number
+                    outResult!(*count+1)
+                }
+            } |
+
+            contract set(row, data, outResult) = {
+                
+                new pullResult in {
+                    pull!(*row, *pullResult) |
+                    
+                    for (valPull, deleted, _ <- pullResult) {
+                        match *valPull {
+                            0 => {
+                                // Put the row back for next get, 
+                                // Set deleted to false, set always restores
+                                store!(*row, false, *data) |
+                                
+                                if (*deleted) {
+                                    // 1 means record was restored and replaced
+                                    outResult!(1)
+                                } else {
+                                    // 0 means record was replaced
+                                    outResult!(0)
+                                }
+                            }
+                            
+                            _ => // TODO: change to {-1} when matching on -1 is fixed
+                                // -1 means record out of range
+                                outResult!(-1)
+                        }
+                    }
+                }
+            } |
+    
+            contract delete(row, outResult) = {
+                new pullResult in {
+                    pull!(*row, *pullResult) |
+    
+                    for (valPull, deleted, data <- pullResult) {
+                        match *valPull {
+                            0 => {
+                                // Put the row back for next get
+                                // Set deleted to true
+                                store!(*row, true, *data) |
+                            
+                                if (*deleted) {
+                                    // 1 means record was already deleted
+                                    outResult!(1)
+                                } else {
+                                    // 0 means record was deleted
+                                    outResult!(0)
+                                }
+                            }
+                                
+                            _ => // TODO: change to {-1} when matching on -1 is fixed
+                                // Return error if record number out range
+                                outResult!(-1)  // -1 means record out of range
+                        }
+                    }
+                }
+            } |
+            
+            contract find(matcher, outResult) = {
+                new iterate, getResult, matcherResult in {
+                    contract iterate(row) = {
+                        get!(*row, *getResult) |
+                        
+                        for (valGet, deleted, data <- getResult) {
+                            match *valGet {
+                                0 => {
+                                    matcher!(*data, *matcherResult) |
+                            
+                                    for (matcherResult <- matcherResult) {
+                                        if (*matcherResult) {
+                                            outResult!(0, *deleted, *data)
+                                        } else {
+                                            iterate!(*row+1)
+                                        }
+                                    }
+                                }
+                                
+                                {-1} =>
+                                    // No match found
+                                    outResult!(0, Nil, Nil)
+                            }
+                        }
+                    } |
+                        
+                    // Start the iteration
+                    iterate!(1)
+                }
+            }
+        }
+    } |
+        
+        
+        
+    // Tests
+    new retTable, retGet, retAdd, retSet, retDelete, retFind in {
+            
+        // Create the table
+        CreateTable!(*retTable) |
+        for (testTable <- retTable) {
+                
+            // Get the table methods
+            testTable!(*retGet, *retAdd, *retSet, *retDelete, *retFind) |
+            for (get <- retGet;
+                 add <- retAdd;
+                 set <- retSet;
+                 delete <- retDelete;
+                 find <- retFind) {
+            
+                new test, ret in {
+                    // Start testing wth the add method
+                    test!("add", 1) |
+                    
+                    contract test(method, num) = {
+                        match *method {
+                            "add" =>
+                                {
+                                    new ret in {
+                                        ///*
+                                        if (*num <= 50) {
+                                            
+                                            add!("Test Record ${num}" %% {"num": *num}, *ret) |
+                                            
+                                            for (rnum <- ret) {
+                                                stdout!("Added record ${num}" %% {"num": *rnum}) |
+                                                test!("add", *num+1)
+                                            }
+                                            
+                                        } else {
+                                            test!("get", 1)
+                                            // Nil
+                                        }
+                                    }
+                                }
+                            
+                            "get" =>
+                                {
+                                    new ret in {
+                                        if (*num <= 50) {
+                                            get!(*num, *ret) |
+                                            for (rnum, deleted, data <- ret) {
+                                                stdout!("Get returned ${rnum}, ${deleted}, ${data}" %% {"rnum": *rnum, "deleted": *deleted, "data": *data}) |
+                                                test!("get", *num+1)
+                                            }
+                                            
+                                        } else {
+                                            test!("delete", 1)
+                                        }
+                                    }
+                                }
+                            
+                            "delete" =>
+                                {
+                                    if (*num <= 5) {
+                                        delete!(*num, *retDelete) |
+                                        for (success <- retDelete) {
+                                            stdout!("Deleted record ${num}, with ${success}" %% {"num": *num, "success": *success}) |
+                                            test!("delete", *num+1)
+                                        }
+                                    } else {
+                                        test!("set", Nil)
+                                    }
+                                }
+                                
+                            "set" =>
+                                {
+                                    stdout!("Beginning the set test") |
+                                    
+                                    // Get a value, then set something different, then get again
+                                    new ret in {
+                                        stdout!("Getting record 8") |
+                                        get!(8, *ret) |
+                                        for (rnum, deleted, data <- ret) {
+                                            stdout!("Record 8 before set is ${data}" %% {"data": *data}) |
+                                            
+                                            set!(8, "This is record 8 with new data", *ret) |
+                                            for (success <- ret) {
+                                                stdout!("Set result was ${success}" %% {"success": *success}) |
+                                                
+                                                get!(8, *ret) |
+                                                for (rnum2, deleted2, data2 <- ret) {
+                                                    stdout!("Get after set was ${data}" %% {"data": *data2})
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                            _ => 
+                                stdout!("Unknown test")
+                        }
                     }
                 }
             }
         }
+    } |
+    
+    // Register CreateTable with RHours 
+    new return in {
+        @"RHours"!(*return) |
+        for (RHours <- return) {
+            RHours!("RegisterContract", "CreateTable", *CreateTable, *return) |
+            for (_ <- return) {
+                stdout!("CreateTable registered")
+            }
+        }
     }
 }
+

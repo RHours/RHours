@@ -9,20 +9,22 @@ new stdout(`rho:io:stdout`) in {
             return!(bundle+{*RHours})
         } |
         
-        // The RHours contract serves as a registry for RHours functionality.
-        // The RegisterContract method takes a label, as a string, of a contract and
-        //     the contract, as a name, itself.
-        
         // A name, used as a variable, holds a map from the contract label
         //     to the contract name.
-        new varContractMap in {
+        new varContractMap, varLock in {
             
             // Initialize the map of contracts
             varContractMap!({}) |
             
+            // Initialize the lock variable
+            varLock!(true) |
+            
+            // The RHours contract serves as a registry for RHours functionality.
+            // The RegisterContract method takes a label, as a string, of a contract and
+            //     the contract, as a name, itself.
             contract RHours(@"RegisterContract", @label, @c, return) = {
-                // Get the map from the variable
-                for (@map <- varContractMap) {
+                // Get the map and the lock
+                for (@map <- varContractMap; _ <- varLock) {
                     // Add the label and contract pair to the map
                     varContractMap!(map.set(label, c)) |
                     
@@ -30,6 +32,9 @@ new stdout(`rho:io:stdout`) in {
                     //     no chance of returning and the map isn't set.
                     for (@map <- varContractMap) {
                         varContractMap!(map.set(label, c)) |
+                        
+                        // Rest the lock for the next operation
+                        varLock!(true) |
 
                         // Send on the return channel to indicate the operation is complete
                         return!(Nil)

@@ -4,11 +4,16 @@ new stdout(`rho:io:stdout`) in {
     new return in {
         @"RHours"!(*return) |
         for (RHours <- return) {
-            RHours!("RegisterContract", "a", 1, *return) |
+            RHours!("RegisterContract", "b", 2, *return) |
             for (_ <- return) {
                 RHours!("LookupContract", "a", *return) |
                 for (c <- return) {
-                    stdout!(*c)
+                    stdout!(*c) |
+                    
+                    RHours!("LookupContract", "b", *return) |
+                    for (c <- return) {
+                        stdout!(*c)
+                    }
                 }
             }
         }
